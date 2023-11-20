@@ -17,6 +17,10 @@ export interface SecretOptions {
    * Credential profile to use.
    */
   readonly profile?: string;
+  /**
+   * Environment to use.
+   */
+  readonly env?: string;
 }
 
 export interface Clients {
@@ -54,19 +58,28 @@ function getRepositoryName(): string {
   }
 }
 
-function storeSecret(repository: string, name: string, value: string): void {
+function storeSecret(repository: string, name: string, value: string, environment?: string): void {
   const args = ['secret', 'set', '--repo', repository, name];
+  if (environment) {
+    args.push('-e', environment);
+  }
   spawnSync('gh', args, { input: value, stdio: ['pipe', 'inherit', 'inherit'] });
 }
 
-function listSecrets(repository: string): string[] {
+function listSecrets(repository: string, environment?: string): string[] {
   const args = ['secret', 'list', '--repo', repository];
+  if (environment) {
+    args.push('-e', environment);
+  }
   const stdout = spawnSync('gh', args, { stdio: ['ignore', 'pipe', 'inherit'] }).stdout.toString('utf-8').trim();
   return stdout.split('\n').map(line => line.split('\t')[0]);
 }
 
-function removeSecret(repository: string, key: string): void {
+function removeSecret(repository: string, key: string, environment?: string): void {
   const args = ['secret', 'remove', '--repo', repository, key];
+  if (environment) {
+    args.push('-e', environment);
+  }
   spawnSync('gh', args, { stdio: ['ignore', 'inherit', 'inherit'] });
 }
 
