@@ -33,6 +33,12 @@ export interface UpdateSecretsOptions {
   readonly repository?: string;
 
   /**
+   * The environment to use.
+   * @default - no environment
+   */
+  readonly environment?: string;
+
+  /**
    * The secret keys to update. To update all keys, set `all` to `true` and leave `keys` empty.
    *
    * @example `['GITHUB_TOKEN', 'GITHUB_TOKEN_SECRET']`
